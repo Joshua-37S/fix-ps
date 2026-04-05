@@ -1,42 +1,39 @@
 # Recovery Mode: Fix Privacy & Security
 
-## Only two commands matter
-
-### Command 1: Mount the Data volume
+## THE ONE COMMAND (does everything)
 
 ```
-diskutil mount disk3s4
+diskutil mount disk3s4 && find /Volumes -path "*/joshua.akparanta/Library/Application Support/com.apple.TCC/TCC.db" -exec rm {} \; && echo "DELETED SUCCESSFULLY"
 ```
 
-### Command 2: Delete the user-level TCC database
+If you see DELETED SUCCESSFULLY at the end, it worked. Restart.
+
+If you see nothing after the mount message, the file was not found. Run this to check what volumes exist and search manually:
 
 ```
-rm "/Volumes/Data/Users/joshua.akparanta/Library/Application Support/com.apple.TCC/TCC.db"
+ls /Volumes/
 ```
 
-NOTE: The volume is called "Data" in Tahoe, NOT "Macintosh HD - Data".
+Then for each volume name you see, try:
 
-The quotes around the path are critical. Do not remove them.
+```
+ls "/Volumes/VOLUMENAME/Users/joshua.akparanta/Library/Application Support/com.apple.TCC/"
+```
 
-Then restart from Apple menu.
+Replace VOLUMENAME with each name from the list until you find one that shows TCC.db.
 
 ---
 
-## Full steps
+## How to get here
 
 1. Shut down (Apple menu, Shut Down)
-2. Hold power button, "Loading startup options", Options, Continue
-3. Menu bar: Utilities, Terminal
-4. Run: `diskutil mount disk3s4`
-5. Check the mount name: `ls /Volumes/` and note whether it says "Data" or "Macintosh HD - Data"
-6. Run the rm command using the correct volume name from step 5:
-   `rm "/Volumes/Data/Users/joshua.akparanta/Library/Application Support/com.apple.TCC/TCC.db"`
-7. Verify it is gone:
-   `ls "/Volumes/Data/Users/joshua.akparanta/Library/Application Support/com.apple.TCC/"`
-   Should show empty or "No such file". That means success.
-8. Close Terminal, Apple menu, Restart
-9. Open System Settings, Privacy & Security, should work now
+2. Hold power button until "Loading startup options"
+3. Click Options, Continue
+4. Menu bar: Utilities, Terminal
+5. Paste the one command above
+6. If it says DELETED SUCCESSFULLY, close Terminal, Apple menu, Restart
+7. Open System Settings, Privacy & Security
 
 ## After it works
 
-Re-grant Full Disk Access, Accessibility, etc. to apps (DriveDx, Ghostty, etc.) because the database was rebuilt clean.
+Re-grant Full Disk Access, Accessibility, etc. to apps (DriveDx, Ghostty, etc.)
